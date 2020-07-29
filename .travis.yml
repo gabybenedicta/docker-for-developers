@@ -3,7 +3,15 @@ services:
   - docker
 
 script:
-  - docker build -t gabybenedicta/node .
-  - docker images gabybenedicta/node
+  - docker build -t $DOCKER_USERNAME/node .
+  - docker images $DOCKER_USERNAME/node
 
- 
+before_deploy:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  
+deploy:
+  provider: script
+  script: docker push gabybenedicta/node
+  on:
+    branch: master
+
